@@ -1,0 +1,71 @@
+/* Gallery Wrapper */
+.gallery-wrapper {
+  padding: 40px 20px;
+  background-color: #0b0f12;
+  min-height: 100vh;
+}
+
+/* Masonry Gallery using CSS Columns */
+.gallery {
+  column-count: 4;
+  column-gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Gallery Item */
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Gallery Item Hover Effects */
+.gallery-item:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 10px 30px rgba(89, 191, 255, 0.3);
+  transform: translateY(-5px);
+}
+
+/* Image Styling */
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+/* Tablet Breakpoint (600px - 899px) */
+@media (max-width: 899px) {
+  .gallery {
+    column-count: 3;
+    column-gap: 15px;
+  }
+  
+  .gallery-wrapper {
+    padding: 30px 15px;
+  }
+  
+  .gallery-item {
+    margin-bottom: 15px;
+  }
+}
+
+/* Mobile Breakpoint (below 600px) */
+@media (max-width: 599px) {
+  .gallery {
+    column-count: 1;
+    column-gap: 0;
+  }
+  
+  .gallery-wrapper {
+    padding: 20px 10px;
+  }
+  
+  .gallery-item {
+    margin-bottom: 15px;
+  }
+}

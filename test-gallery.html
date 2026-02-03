@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тест Галереї</title>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <h1 style="color: #59bfff; text-align: center; padding: 20px;">Тест Галереї</h1>
+  
+  <section id="gallery" class="gallery-wrapper">
+    <div class="gallery" id="masonry-gallery">
+      <!-- Gallery items will be inserted here by JavaScript -->
+    </div>
+  </section>
+
+  <!-- Modal for enlarged image -->
+  <div id="image-modal" class="modal">
+    <span class="modal-close">&times;</span>
+    <div class="modal-content">
+      <img id="modal-img" src="" alt="Enlarged view">
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    console.log('Script started');
+    
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      offset: 50
+    });
+    console.log('AOS initialized');
+
+    // Modal functionality
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
+    const closeBtn = document.querySelector('.modal-close');
+    console.log('Modal elements:', modal, modalImg, closeBtn);
+
+    // Images array
+    const images = [
+      'assets/img/photo1.jpg',
+      'assets/img/photo2.jpg',
+      'assets/img/photo3.jpg',
+      'assets/img/photo4.jpg',
+      'assets/img/photo6.jpg',
+      'assets/img/photo_2025-06-03_22-58-14.jpg',
+      'assets/img/photo_2025-07-08_20-20-05.jpg',
+      'assets/img/photo_2025-07-22_22-35-40.jpg',
+      'assets/img/photo_2025-08-01_00-46-17.jpg',
+      'assets/img/photo_2025-11-09_02-14-41.jpg',
+      'assets/img/photo_2025-11-21_17-50-59.jpg',
+      'assets/img/photo_2025-11-22_00-52-02.jpg',
+    ];
+    console.log('Images array:', images);
+
+    // Generate gallery items
+    const gallery = document.getElementById('masonry-gallery');
+    console.log('Gallery element:', gallery);
+    
+    if (gallery) {
+      images.forEach((src, index) => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.setAttribute('data-aos', 'fade-up');
+        item.setAttribute('data-aos-delay', index * 50);
+        
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = `Gallery ${index + 1}`;
+        img.loading = 'lazy';
+        
+        // Add error handler
+        img.onerror = function() {
+          console.error('Failed to load image:', src);
+        };
+        
+        img.onload = function() {
+          console.log('Image loaded:', src);
+        };
+        
+        // Add click event to open modal
+        img.addEventListener('click', function() {
+          console.log('Image clicked:', this.src);
+          modal.style.display = 'flex';
+          modalImg.src = this.src;
+          document.body.style.overflow = 'hidden';
+        });
+        
+        item.appendChild(img);
+        gallery.appendChild(item);
+        console.log('Added item:', index);
+      });
+      
+      console.log('Gallery items created:', gallery.children.length);
+    } else {
+      console.error('Gallery element not found!');
+    }
+
+    // Close modal on close button click
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      });
+    }
+
+    // Close modal on background click
+    if (modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+    
+    console.log('Script completed');
+  </script>
+</body>
+</html>
