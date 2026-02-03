@@ -28,6 +28,11 @@ body {
   overflow-x: hidden;
   line-height: 1.6;
 }
+/* ===== INPUT STYLES ===== */
+.form-control::placeholder {
+  color: #cccccc!important; /* Bootstrap gray */
+  opacity: 1;
+}
 
 /* ===== NAVIGATION ===== */
 .navbar {
