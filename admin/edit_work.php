@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once "includes/header.php";
 require_once __DIR__ . '/../includes/db.php';
 if (!($_SESSION['admin_logged'] ?? false)) { header('Location: login.php'); exit; }
 $id = $_GET['id'] ?? null;
@@ -7,7 +7,7 @@ if (!$id) { header('Location: dashboard.php'); exit; }
 $stmt = $db->prepare('SELECT * FROM works WHERE id = :id'); $stmt->execute([':id'=>$id]); $w = $stmt->fetch(PDO::FETCH_ASSOC);
 $err=''; if($_SERVER['REQUEST_METHOD']==='POST'){
   $title = $_POST['title'] ?? ''; $desc = $_POST['description'] ?? ''; $cat = $_POST['category'] ?? '';
-  if (!$title) $err='Назва обов'язкова';
+  if (!$title) $err="Назва обов'язкова";
   if (!$err) {
     $imgpath = $w['image'];
     if (!empty($_FILES['image']['tmp_name'])) {
@@ -22,8 +22,8 @@ $err=''; if($_SERVER['REQUEST_METHOD']==='POST'){
   }
 }
 ?>
-<!doctype html><html><head><meta charset="utf-8"><title>Edit</title><link href="/assets/css/bootstrap.min.css" rel="stylesheet"></head>
-<body class="p-4"><div class="container" style="max-width:720px">
+
+<div class="container" style="max-width:720px">
 <h3>Редагувати роботу</h3>
 <?php if($err): ?><div class="alert alert-danger"><?php echo $err; ?></div><?php endif; ?>
 <form method="post" enctype="multipart/form-data">
