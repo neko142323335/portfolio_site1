@@ -1,1 +1,7 @@
-database/portfolio.db
+*.db
+vendor/
+composer.lock
+.env.local
+logs/
+*.log
+.DS_Store

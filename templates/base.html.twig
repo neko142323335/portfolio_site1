@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="{{ site_lang }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{{ site_name }}{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ base }}assets/css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body class="{% if is_current_page('index') %}home-page{% endif %}">
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">{{ site_name }}</div>
+      <ul class="nav-menu">
+        <li><a href="{{ base }}index.php" {% if is_current_page('index') %}class="active"{% endif %}>Головна</a></li>
+        <li><a href="{{ base }}gallery.php" {% if is_current_page('gallery') %}class="active"{% endif %}>Проекти</a></li>
+        <li><a href="{{ base }}contact.php" {% if is_current_page('contact') %}class="active"{% endif %}>Контакти</a></li>
+        {% if is_admin() %}
+          <li><a href="{{ base }}admin/dashboard.php" class="btn btn-sm btn-primary ms-2"><i class="bi bi-gear"></i> Адмін</a></li>
+          <li><a href="{{ base }}logout.php" class="btn btn-sm btn-outline-danger ms-2">Вихід</a></li>
+        {% elseif user_id %}
+          <li><a href="{{ base }}dashboard.php" {% if is_current_page('dashboard') %}class="active"{% endif %}>Кабінет</a></li>
+          <li><a href="{{ base }}logout.php" class="btn btn-sm btn-outline-danger ms-2">Вихід</a></li>
+        {% else %}
+          <li><a href="{{ base }}auth.php" {% if is_current_page('auth') %}class="active"{% endif %}>Вхід/Реєстрація</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  {% if logged_out == 1 %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 80px 15px 0 15px; border-radius: 0;">
+      <i class="bi bi-check-circle"></i> Ви успішно вийшли з облікового запису.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</body>
+</html>

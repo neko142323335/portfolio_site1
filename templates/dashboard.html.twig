@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Мій кабінет - {{ site_name }}{% endblock %}
+
+{% block content %}
+  <section class="auth-section" style="padding-top: 150px; padding-bottom: 150px;">
+    <div class="auth-container">
+      <h2 class="auth-title">Мій кабінет</h2>
+
+      <div class="auth-form">
+        {% if user_name %}
+          <div class="alert alert-info">
+            <strong>{{ user_name|sanitize }}</strong><br>
+            {% if user_email %}
+              Email: {{ user_email|sanitize }}
+            {% endif %}
+          </div>
+
+          <p class="text-center">
+            <a href="logout.php" class="btn btn-outline-danger">Вийти</a>
+          </p>
+        {% else %}
+          <div class="alert alert-warning text-center">
+            Ви не авторизовані. <a href="auth.php">Увійти в кабінет</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% include 'footer.html.twig' %}
+{% endblock %}

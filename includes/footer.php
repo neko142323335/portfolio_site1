@@ -21,6 +21,11 @@
     </div>
   </footer>
 
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="back-to-top" title="На вершину">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
@@ -82,12 +87,27 @@
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
       const navbar = document.querySelector('.navbar');
+      const backToTopBtn = document.getElementById('backToTop');
+      
       if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
+        backToTopBtn.classList.add('show');
       } else {
         navbar.classList.remove('scrolled');
+        backToTopBtn.classList.remove('show');
       }
     });
+
+    // Back to Top button functionality
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
 
     // Auth enhancements
     // Password toggle functionality
