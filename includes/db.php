@@ -72,7 +72,13 @@ function initialize_database($db) {
         password TEXT NOT NULL
       );
     ');
-
+    $db->exec('
+      CREATE TABLE IF NOT EXISTS categories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE NOT NULL,
+        description TEXT NOT NULL
+      );
+    ');
     // Insert default admin user from environment variables
     $admin_email = DEFAULT_ADMIN_EMAIL;
     $admin_pass = DEFAULT_ADMIN_PASSWORD;
@@ -81,6 +87,33 @@ function initialize_database($db) {
     $admin_stmt->execute([':e' => $admin_email, ':p' => $admin_password]);
 
     // Insert example works with real artwork images
+    $categories = [
+      [
+        'name' => 'Ілюстрація',
+        'description' => 'Мистецтво створення візуальних образів для книг, журналів та інших медіа.'
+      ],
+      [
+        'name' => 'Живопис',
+        'description' => 'Техніка створення мистецьких творів за допомогою фарб на різних поверхнях.'
+      ],
+      [
+        'name' => 'Графіка',
+        'description' => 'Мистецтво створення зображень за допомогою ліній, форм і текстур.'
+      ],
+      [
+        'name' => 'Фотографія',
+        'description' => 'Мистецтво та техніка створення зображень за допомогою світла та камери.'
+      ]
+      
+    ];
+     $categories_stmt=$db->prepare('INSERT INTO categories (name, description) VALUES (:n, :d)');
+    foreach ($categories as $index => $category) {
+      $categories_stmt->execute([
+        ':n' => $category['name'],
+        ':d' => $category['description'],
+      ]);
+    }
+
     $works = [
       [
         'title' => 'Дух лісу',

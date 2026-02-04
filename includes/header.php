@@ -8,7 +8,7 @@ require_once __DIR__ . '/helpers.php';
 
 // Determine base path - check if we're in admin section
 $is_admin_page = strpos($_SERVER['PHP_SELF'], '/admin/') !== false;
-$base = $is_admin_page ? '../' : '';
+$base = $is_admin_page ? '' : '';
 ?>
 <!doctype html>
 <html lang="<?php echo SITE_LANG; ?>">

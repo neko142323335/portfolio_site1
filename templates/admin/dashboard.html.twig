@@ -22,14 +22,14 @@
       {% endif %}
 
       <div class="mb-4">
-        <a href="add_work.php" class="btn btn-primary">
+        <a href="works/add_work.php" class="btn btn-primary">
           <i class="bi bi-plus-circle"></i> Додати нову роботу
         </a>
       </div>
 
       {% if works is empty %}
         <div class="alert alert-info text-center">
-          Робіт немає. <a href="add_work.php" style="color: #ff4500; font-weight: 600;">Додати першу роботу</a>
+          Робіт немає. <a href="works/add_work.php" style="color: #ff4500; font-weight: 600;">Додати першу роботу</a>
         </div>
       {% else %}
         <div class="table-responsive">
@@ -49,10 +49,10 @@
                   <td>{{ work.category|sanitize }}</td>
                   <td>{{ work.created_at }}</td>
                   <td>
-                    <a href="edit_work.php?id={{ work.id }}" class="btn btn-sm btn-warning">
+                    <a href="works/edit_work.php?id={{ work.id }}" class="btn btn-sm btn-warning">
                       <i class="bi bi-pencil"></i> Редагувати
                     </a>
-                    <a href="delete_work.php?id={{ work.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені?')">
+                    <a href="works/delete_work.php?id={{ work.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені?')">
                       <i class="bi bi-trash"></i> Видалити
                     </a>
                   </td>
