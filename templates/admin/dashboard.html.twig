@@ -1,0 +1,69 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Панель адміністратора - {{ site_name }}{% endblock %}
+
+{% block content %}
+  <section class="auth-section" style="padding-top: 150px; padding-bottom: 100px; min-height: auto;">
+    <div class="auth-container" style="max-width: 900px;">
+      <h2 class="auth-title" style="color: #ff4500;">Панель адміністратора</h2>
+
+      {% if success %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="bi bi-check-circle"></i> {{ success }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endif %}
+
+      {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="bi bi-exclamation-circle"></i> {{ error }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endif %}
+
+      <div class="mb-4">
+        <a href="add_work.php" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Додати нову роботу
+        </a>
+      </div>
+
+      {% if works is empty %}
+        <div class="alert alert-info text-center">
+          Робіт немає. <a href="add_work.php" style="color: #ff4500; font-weight: 600;">Додати першу роботу</a>
+        </div>
+      {% else %}
+        <div class="table-responsive">
+          <table class="table table-hover table-dark">
+            <thead>
+              <tr>
+                <th style="color: #ff4500;">Назва</th>
+                <th style="color: #ff4500;">Категорія</th>
+                <th style="color: #ff4500;">Дата</th>
+                <th style="color: #ff4500;">Дії</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for work in works %}
+                <tr>
+                  <td>{{ work.title|sanitize }}</td>
+                  <td>{{ work.category|sanitize }}</td>
+                  <td>{{ work.created_at }}</td>
+                  <td>
+                    <a href="edit_work.php?id={{ work.id }}" class="btn btn-sm btn-warning">
+                      <i class="bi bi-pencil"></i> Редагувати
+                    </a>
+                    <a href="delete_work.php?id={{ work.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені?')">
+                      <i class="bi bi-trash"></i> Видалити
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  {% include 'footer.html.twig' %}
+{% endblock %}

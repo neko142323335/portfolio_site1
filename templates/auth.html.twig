@@ -1,0 +1,200 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Вхід та Реєстрація - {{ site_name }}{% endblock %}
+
+{% block content %}
+  <section class="auth-section">
+    <div class="auth-container">
+      <h2 class="auth-title" id="authTitle" style="color: #ff4500;">Вхід</h2>
+
+      <ul class="nav nav-tabs auth-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">
+            <i class="bi bi-box-arrow-in-right"></i> Вхід
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">
+            <i class="bi bi-person-plus-fill"></i> Реєстрація
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <!-- Login Tab -->
+        <div class="tab-pane fade show active" id="login" role="tabpanel">
+          <form method="POST" action="" class="auth-form mt-4">
+            {% if login_error %}
+              <div class="alert alert-danger">{{ login_error }}</div>
+            {% endif %}
+
+            <div class="mb-3">
+              <label for="loginEmail" class="form-label">
+                <span style="color: #ff4500;">
+                  <i class="bi bi-envelope-fill"></i> Email
+                </span>
+              </label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="loginEmail" 
+                name="email" 
+                required
+                placeholder="your@email.com"
+              >
+            </div>
+
+            <div class="mb-3">
+              <label for="loginPassword" class="form-label">
+                <span style="color: #ff4500;">
+                  <i class="bi bi-lock-fill"></i> Пароль
+                </span>
+              </label>
+              <div class="input-group position-relative">
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  id="loginPassword" 
+                  name="password" 
+                  required
+                  placeholder="••••••••"
+                >
+                <button 
+                  type="button" 
+                  class="password-toggle" 
+                  data-target="loginPassword"
+                  aria-label="Показати пароль"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" name="login" class="btn btn-primary w-100">
+              <i class="bi bi-box-arrow-in-right"></i> Увійти
+            </button>
+          </form>
+        </div>
+
+        <!-- Register Tab -->
+        <div class="tab-pane fade" id="register" role="tabpanel">
+          <form method="POST" action="" class="auth-form mt-4">
+
+            {% if register_error %}
+              <div class="alert alert-danger">{{ register_error }}</div>
+            {% endif %}
+
+            {% if register_success %}
+              <div class="alert alert-success">{{ register_success }}</div>
+            {% endif %}
+
+            <div class="mb-3">
+              <label for="registerName" class="form-label">
+                <span style="color: #ff4500;">
+                  <i class="bi bi-person-fill"></i> Ім'я
+                </span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="registerName" 
+                name="name" 
+                required
+                placeholder="Ваше ім'я"
+              >
+            </div>
+
+            <div class="mb-3">
+              <label for="registerEmail" class="form-label">
+                <span style="color: #ff4500;">
+                  <i class="bi bi-envelope-fill"></i> Email
+                </span>
+              </label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="registerEmail" 
+                name="email" 
+                required
+                placeholder="your@email.com"
+              >
+            </div>
+
+            <div class="mb-3">
+              <label for="registerPassword" class="form-label">
+                <span style="color: #ff4500;">
+                  <i class="bi bi-lock-fill"></i> Пароль
+                </span>
+              </label>
+              <div class="input-group position-relative">
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  id="registerPassword" 
+                  name="password" 
+                  required
+                  placeholder="••••••••"
+                >
+                <button 
+                  type="button" 
+                  class="password-toggle" 
+                  data-target="registerPassword"
+                  aria-label="Показати пароль"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="password-strength">
+                <div id="passwordStrengthBar" class="password-strength-bar"></div>
+              </div>
+              <small class="form-help">Пароль мінімум 6 символів</small>
+            </div>
+
+            <div class="mb-3">
+              <label for="registerPasswordConfirm" class="form-label">
+                <span style="color: #ff4500;">
+                  <i class="bi bi-lock-check"></i> Підтвердьте пароль
+                </span>
+              </label>
+              <div class="input-group position-relative">
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  id="registerPasswordConfirm" 
+                  name="confirm" 
+                  required
+                  placeholder="••••••••"
+                >
+                <button 
+                  type="button" 
+                  class="password-toggle" 
+                  data-target="registerPasswordConfirm"
+                  aria-label="Показати пароль"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" name="register" class="btn btn-primary w-100">
+              <i class="bi bi-person-plus-fill"></i> Зареєструватися
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include 'footer.html.twig' %}
+
+  <script>
+    // Change title when switching tabs
+    document.getElementById('login-tab').addEventListener('click', function() {
+      document.getElementById('authTitle').textContent = 'Вхід';
+    });
+    
+    document.getElementById('register-tab').addEventListener('click', function() {
+      document.getElementById('authTitle').textContent = 'Реєстрація';
+    });
+  </script>
+{% endblock %}

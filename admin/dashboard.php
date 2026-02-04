@@ -1,27 +1,32 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
-if (!($_SESSION['admin_logged'] ?? false)) {
-  header('Location: login.php'); exit;
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/helpers.php';
+
+$is_admin_page = true;
+
+require_once __DIR__ . '/../includes/twig.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
 }
-$works = $db->query('SELECT * FROM works ORDER BY created_at DESC')->fetchAll(PDO::FETCH_ASSOC);
-?>
-<div class="container py-4">
-  <h3>Адмінпанель</h3>
-  <a class="btn btn-success mb-3" href="add_work.php">Додати роботу</a>
-  <table class="table table-striped">
-    <thead><tr><th>ID</th><th>Назва</th><th>Категорія</th><th>Дії</th></tr></thead>
-    <tbody>
-    <?php foreach($works as $w): ?>
-      <tr>
-        <td><?php echo $w['id']; ?></td>
-        <td><?php echo htmlspecialchars($w['title']); ?></td>
-        <td><?php echo htmlspecialchars($w['category']); ?></td>
-        <td>
-          <a class="btn btn-sm btn-primary" href="edit_work.php?id=<?php echo $w['id']; ?>">Редагувати</a>
-          <a class="btn btn-sm btn-danger" href="delete_work.php?id=<?php echo $w['id']; ?>" onclick="return confirm('Видалити?')">Видалити</a>
-        </td>
-      </tr>
-    <?php endforeach; ?>
-    </tbody>
-  </table>
-</div>
+
+require_admin();
+
+try {
+  $stmt = $db->query('SELECT * FROM works ORDER BY created_at DESC');
+  $works = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+  log_error('Error fetching works', ['message' => $e->getMessage()]);
+  $works = [];
+}
+
+$success = isset($_GET['success']) ? 'Операція успішна!' : '';
+$error = isset($_GET['error']) ? $_GET['error'] : '';
+
+echo $twig->render('admin/dashboard.html.twig', [
+  'works' => $works,
+  'success' => $success,
+  'error' => $error,
+  'logged_out' => isset($_GET['logged_out']) ? (int)$_GET['logged_out'] : 0,
+]);

@@ -1,39 +1,52 @@
 <?php
 require_once 'includes/db.php';
+require_once 'includes/config.php';
+require_once 'includes/helpers.php';
+require_once 'includes/twig.php';
+
 $sent = false;
-if ($_SERVER['REQUEST_METHOD']==='POST') {
-  $name = $_POST['name'] ?? '';
-  $email = $_POST['email'] ?? '';
-  $message = $_POST['message'] ?? '';
-  // Simple validation
-  if ($name && $email && $message) {
-    // Here you could send mail or save to DB. We'll save to file for demo.
-    $log = sprintf("[%s] %s <%s>\n%s\n\n", date('Y-m-d H:i:s'), $name, $email, $message);
-    file_put_contents('contacts.log', $log, FILE_APPEND);
-    $sent = true;
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  try {
+    $name = sanitize_input($_POST['name'] ?? '');
+    $email = sanitize_input($_POST['email'] ?? '');
+    $message = sanitize_input($_POST['message'] ?? '');
+
+    if (!$name || !$email || !$message) {
+      $error = ERROR_MESSAGES['required_fields'];
+    } elseif (!validate_email($email)) {
+      $error = ERROR_MESSAGES['invalid_email'];
+    } elseif (strlen($message) < 10) {
+      $error = 'Повідомлення повинно містити мінімум 10 символів';
+    } else {
+      $log_dir = __DIR__ . '/logs';
+      if (!is_dir($log_dir)) {
+        @mkdir($log_dir, 0755, true);
+      }
+
+      $log_file = $log_dir . '/contacts.log';
+      $timestamp = date('Y-m-d H:i:s');
+      $log_entry = "[$timestamp] $name <$email>\n$message\n" . str_repeat('-', 60) . "\n\n";
+
+      if (@file_put_contents($log_file, $log_entry, FILE_APPEND)) {
+        $sent = true;
+      } else {
+        $error = 'Помилка при збереженні повідомлення. Спробуйте пізніше.';
+        log_error('Failed to save contact message', ['email' => $email]);
+      }
+    }
+  } catch (Exception $e) {
+    log_error('Error in contact form', ['message' => $e->getMessage()]);
+    $error = 'Неочікувана помилка. Спробуйте пізніше.';
   }
 }
-?>
-<?php include 'includes/header.php'; ?>
-<div class="container py-5">
-  <h2>Контакти</h2>
-  <?php if($sent): ?>
-    <div class="alert alert-success">Повідомлення надіслано. Дякую!</div>
-  <?php endif; ?>
-  <form method="post" action="contact.php">
-    <div class="mb-3">
-      <label class="form-label">Ім'я</label>
-      <input class="form-control" name="name" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Email</label>
-      <input class="form-control" name="email" type="email" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Повідомлення</label>
-      <textarea class="form-control" name="message" rows="5" required></textarea>
-    </div>
-    <button class="btn btn-primary">Надіслати</button>
-  </form>
-</div>
-<?php include 'includes/footer.php'; ?>
+
+echo $twig->render('contact.html.twig', [
+  'sent' => $sent,
+  'error' => $error,
+  'form_name' => htmlspecialchars($_POST['name'] ?? ''),
+  'form_email' => htmlspecialchars($_POST['email'] ?? ''),
+  'form_message' => htmlspecialchars($_POST['message'] ?? ''),
+  'logged_out' => isset($_GET['logged_out']) ? (int)$_GET['logged_out'] : 0,
+]);

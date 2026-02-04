@@ -1,5 +1,8 @@
 version: '3.8'
 
+volumes:
+  vendor:
+
 services:
   web:
     build: .
@@ -9,7 +12,12 @@ services:
     volumes:
       - .:/var/www/html
       - ./database:/var/www/html/database
+      - vendor:/var/www/html/vendor
     environment:
       - PHP_DISPLAY_ERRORS=1
       - PHP_ERROR_REPORTING=E_ALL
+      - APP_ENV=development
+      - DEBUG_MODE=1
+      - ADMIN_EMAIL=admin@noosfera.ua
+      - ADMIN_PASSWORD=admin123
     restart: unless-stopped

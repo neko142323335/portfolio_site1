@@ -1,0 +1,103 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Контакти - {{ site_name }}{% endblock %}
+
+{% block content %}
+  <section class="auth-section">
+    <div class="auth-container">
+      <h2 class="auth-title" style="color: #ff4500;">Контакти</h2>
+      
+      {% if sent %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Успіх!</strong> Ваше повідомлення було надіслано. Дякуємо за звернення!
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endif %}
+
+      {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Помилка!</strong> {{ error }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endif %}
+      
+      <div class="auth-form">
+        <form method="POST" action="">
+          <div class="mb-3">
+            <label for="name" class="form-label">
+              <span style="color: #ff4500;">
+                <i class="bi bi-person-fill"></i> Ім'я
+              </span>
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="name" 
+              name="name" 
+              required
+              placeholder="Ваше ім'я"
+              value="{{ form_name }}"
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">
+              <span style="color: #ff4500;">
+                <i class="bi bi-envelope-fill"></i> Email
+              </span>
+            </label>
+            <input 
+              type="email" 
+              class="form-control" 
+              id="email" 
+              name="email" 
+              required
+              placeholder="your@email.com"
+              value="{{ form_email }}"
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">
+              <span style="color: #ff4500;">
+                <i class="bi bi-chat-left-text-fill"></i> Повідомлення
+              </span>
+            </label>
+            <textarea 
+              class="form-control" 
+              id="message" 
+              name="message" 
+              rows="5" 
+              required
+              placeholder="Ваше повідомлення..."
+            >{{ form_message }}</textarea>
+            <small class="form-text text-muted">Мінімум 10 символів</small>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-send"></i> Відправити
+          </button>
+        </form>
+
+        <hr class="my-5">
+
+        <div class="row mt-5">
+          <div class="col-md-6 mb-3">
+            <h5 style="color: #ff4500;">
+              <i class="bi bi-envelope"></i> Email
+            </h5>
+            <p><a href="mailto:contact@noosfera.art" style="color: #ff4500; text-decoration: none;">contact@noosfera.art</a></p>
+          </div>
+          <div class="col-md-6 mb-3">
+            <h5 style="color: #ff4500;">
+              <i class="bi bi-geo-alt"></i> Розташування
+            </h5>
+            <p style="color: #ff4500;">Україна</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include 'footer.html.twig' %}
+{% endblock %}

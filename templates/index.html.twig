@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Головна - {{ site_name }}{% endblock %}
+
+{% block content %}
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">{{ site_name }}</h1>
+      <p class="hero-subtitle">Мистецтво Української Міфології</p>
+      <p class="hero-description">Дослідження давніх легенд через сучасне мистецтво</p>
+    </div>
+    <div class="scroll-down">
+      <a href="#gallery" class="scroll-btn">
+        <span>Переглянути проекти</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="gallery-section">
+    {% if works is empty %}
+      <div class="container py-5">
+        <div class="alert alert-info text-center">
+          Роботи не знайдені
+        </div>
+      </div>
+    {% else %}
+      {% for work in works %}
+        <div class="artwork-container" data-aos="fade-up">
+          <div class="artwork-image">
+            <img src="{{ work.image|sanitize }}" alt="{{ work.title|sanitize }}" loading="lazy">
+          </div>
+          <div class="artwork-caption">
+            <h2 class="artwork-title">{{ work.title|sanitize }}</h2>
+            <p class="artwork-description">
+              {{ work.description|sanitize|nl2br }}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </section>
+
+  <!-- Footer -->
+  {% include 'footer.html.twig' %}
+{% endblock %}

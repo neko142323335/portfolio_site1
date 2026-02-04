@@ -1,0 +1,60 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Галерея - {{ site_name }}{% endblock %}
+
+{% block content %}
+  <!-- Gallery Section -->
+  <section id="gallery" class="gallery-section">
+    <!-- Category Filter -->
+    {% if categories is not empty %}
+      <div class="container d-flex justify-content-center mb-4 pt-2">
+        <div class="btn-group" role="group">
+          <a 
+            href="gallery.php" 
+            class="btn btn-outline-secondary {% if not category %}active{% endif %}"
+          >
+            Усі роботи
+          </a>
+          {% for cat in categories %}
+            <a 
+              href="gallery.php?category={{ cat.category|url_encode }}" 
+              class="btn btn-outline-secondary {% if category == cat.category %}active{% endif %}"
+            >
+              {{ cat.category|sanitize }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Artworks Grid -->
+    {% if works is empty %}
+      <div class="container py-5">
+        <div class="alert alert-info text-center">
+          Роботи не знайдені
+        </div>
+      </div>
+    {% else %}
+      {% for work in works %}
+        <div class="artwork-container" data-aos="fade-up">
+          <div class="artwork-image">
+            <img 
+              src="{{ work.image|sanitize }}" 
+              alt="{{ work.title|sanitize }}" 
+              loading="lazy"
+            >
+          </div>
+          <div class="artwork-caption">
+            <h2 class="artwork-title">{{ work.title|sanitize }}</h2>
+            <p class="artwork-description">
+              {{ work.description|sanitize|nl2br }}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </section>
+
+  <!-- Footer -->
+  {% include 'footer.html.twig' %}
+{% endblock %}
