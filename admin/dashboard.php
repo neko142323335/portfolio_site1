@@ -3,9 +3,13 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/helpers.php';
 
+use App\Database\Connection;
+
+$db = Connection::get();
+
 $is_admin_page = true;
 
-require_once __DIR__ . '/../includes/twig.php';
+$twig = require __DIR__ . '/../includes/twig.php';
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();

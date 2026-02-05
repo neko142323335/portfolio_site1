@@ -10,14 +10,14 @@
       <div class="container d-flex justify-content-center mb-4 pt-2">
         <div class="btn-group" role="group">
           <a 
-            href="gallery.php" 
+            href="{{ base }}gallery" 
             class="btn btn-outline-secondary {% if not category %}active{% endif %}"
           >
             Усі роботи
           </a>
           {% for cat in categories %}
             <a 
-              href="gallery.php?category={{ cat.category|url_encode }}" 
+              href="{{ base }}gallery?category={{ cat.category|url_encode }}" 
               class="btn btn-outline-secondary {% if category == cat.category %}active{% endif %}"
             >
               {{ cat.category|sanitize }}

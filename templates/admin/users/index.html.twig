@@ -1,0 +1,80 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Користувачі - {{ site_name }}{% endblock %}
+
+{% block content %}
+  <section class="auth-section" style="padding-top: 150px; padding-bottom: 100px; min-height: auto;">
+    <div class="auth-container" style="max-width: 1100px;">
+      <h2 class="auth-title" style="color: #ff4500;">Користувачі</h2>
+
+      {% if success %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="bi bi-check-circle"></i> {{ success }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endif %}
+
+      {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="bi bi-exclamation-circle"></i> {{ error }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endif %}
+
+      <div class="mb-4">
+        <a href="/admin/users/add" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Додати користувача
+        </a>
+        <a href="/admin/dashboard" class="btn btn-outline-secondary ms-2">
+          <i class="bi bi-arrow-left"></i> Назад до дашборду
+        </a>
+      </div>
+
+      {% if users is empty %}
+        <div class="alert alert-info text-center">
+          Користувачів немає. <a href="/admin/users/add" style="color: #ff4500; font-weight: 600;">Додати першого користувача</a>
+        </div>
+      {% else %}
+        <div class="table-responsive">
+          <table class="table table-hover table-dark">
+            <thead>
+              <tr>
+                <th style="color: #ff4500;">Ім'я</th>
+                <th style="color: #ff4500;">Email</th>
+                <th style="color: #ff4500;">Роль</th>
+                <th style="color: #ff4500;">Дата реєстрації</th>
+                <th style="color: #ff4500;">Дії</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <td>{{ user.name|sanitize }}</td>
+                  <td>{{ user.email|sanitize }}</td>
+                  <td>
+                    {% if user.is_admin == 1 %}
+                      <span class="badge bg-danger">Адміністратор</span>
+                    {% else %}
+                      <span class="badge bg-secondary">Користувач</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ user.created_at }}</td>
+                  <td>
+                    <a href="/admin/users/edit?id={{ user.id }}" class="btn btn-sm btn-warning">
+                      <i class="bi bi-pencil"></i> Редагувати
+                    </a>
+                    <a href="/admin/users/delete?id={{ user.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені?')">
+                      <i class="bi bi-trash"></i> Видалити
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  {% include 'footer.html.twig' %}
+{% endblock %}

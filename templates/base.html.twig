@@ -15,23 +15,23 @@
     <div class="nav-container">
       <div class="nav-logo">{{ site_name }}</div>
       <ul class="nav-menu">
-        <li><a href="{{ base }}index.php" {% if is_current_page('index') %}class="active"{% endif %}>Головна</a></li>
-        <li><a href="{{ base }}gallery.php" {% if is_current_page('gallery') %}class="active"{% endif %}>Проекти</a></li>
-        <li><a href="{{ base }}contact.php" {% if is_current_page('contact') %}class="active"{% endif %}>Контакти</a></li>
+        <li><a href="{{ base }}" {% if is_current_page('index') %}class="active"{% endif %}>Головна</a></li>
+        <li><a href="{{ base }}gallery" {% if is_current_page('gallery') %}class="active"{% endif %}>Проекти</a></li>
+        <li><a href="{{ base }}contact" {% if is_current_page('contact') %}class="active"{% endif %}>Контакти</a></li>
         {% if is_admin() %}
-          <li><a href="{{ base }}admin/dashboard.php" class="btn btn-sm btn-primary ms-2"><i class="bi bi-gear"></i> Адмін</a></li>
-          <li><a href="{{ base }}logout.php" class="btn btn-sm btn-outline-danger ms-2">Вихід</a></li>
-        {% elseif user_id %}
-          <li><a href="{{ base }}dashboard.php" {% if is_current_page('dashboard') %}class="active"{% endif %}>Кабінет</a></li>
-          <li><a href="{{ base }}logout.php" class="btn btn-sm btn-outline-danger ms-2">Вихід</a></li>
+          <li><a href="{{ base }}admin/dashboard" class="btn btn-sm btn-primary ms-2"><i class="bi bi-gear"></i> Адмін панель</a></li>
+          <li><a href="{{ base }}logout" class="btn btn-sm btn-outline-danger ms-2"><i class="bi bi-box-arrow-right"></i> Вихід</a></li>
+        {% elseif user_id() %}
+          <li><a href="{{ base }}dashboard" {% if is_current_page('dashboard') %}class="active"{% endif %}><i class="bi bi-person-circle"></i> Кабінет</a></li>
+          <li><a href="{{ base }}logout" class="btn btn-sm btn-outline-danger ms-2"><i class="bi bi-box-arrow-right"></i> Вихід</a></li>
         {% else %}
-          <li><a href="{{ base }}auth.php" {% if is_current_page('auth') %}class="active"{% endif %}>Вхід/Реєстрація</a></li>
+          <li><a href="{{ base }}auth" {% if is_current_page('auth') %}class="active"{% endif %}><i class="bi bi-box-arrow-in-right"></i> Вхід/Реєстрація</a></li>
         {% endif %}
       </ul>
     </div>
   </nav>
 
-  {% if logged_out == 1 %}
+  {% if logged_out|default(0) == 1 %}
     <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 80px 15px 0 15px; border-radius: 0;">
       <i class="bi bi-check-circle"></i> Ви успішно вийшли з облікового запису.
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
