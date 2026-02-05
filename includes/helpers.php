@@ -84,7 +84,7 @@ function sanitize_input($input) {
  * Check if user is admin
  */
 function is_admin() {
-  return ($_SESSION['admin_logged'] ?? false) === true;
+  return !empty($_SESSION['admin_logged']);
 }
 
 /**
@@ -92,7 +92,7 @@ function is_admin() {
  */
 function require_admin() {
   if (!is_admin()) {
-    header('Location: ' . (strpos($_SERVER['PHP_SELF'], '/admin/') !== false ? 'login.php' : 'admin/login.php'));
+    header('Location: /admin/login');
     exit;
   }
 }
@@ -102,7 +102,7 @@ function require_admin() {
  */
 function require_user() {
   if (!isset($_SESSION['user_id'])) {
-    header('Location: auth.php');
+    header('Location: /auth');
     exit;
   }
 }
@@ -111,10 +111,20 @@ function require_user() {
  * Check if current page matches navigation link
  */
 function is_current_page($page) {
-  $current = basename($_SERVER['PHP_SELF']);
-  // Handle both with and without .php extension
-  $page_file = $page . '.php';
-  return $current === $page || $current === $page_file;
+  $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '';
+  $path = trim($path, '/');
+
+  if ($path === '') {
+    $path = 'index';
+  }
+
+  if (str_ends_with($path, '.php')) {
+    $path = basename($path, '.php');
+  } else {
+    $path = basename($path);
+  }
+
+  return $path === $page;
 }
 
 /**

@@ -23,8 +23,8 @@
       <div class="tab-content">
         <!-- Login Tab -->
         <div class="tab-pane fade show active" id="login" role="tabpanel">
-          <form method="POST" action="" class="auth-form mt-4">
-            {% if login_error %}
+          <form method="POST" action="{{ base }}auth" class="auth-form mt-4">
+            {% if login_error|default(false) %}
               <div class="alert alert-danger">{{ login_error }}</div>
             {% endif %}
 
@@ -70,7 +70,7 @@
               </div>
             </div>
 
-            <button type="submit" name="login" class="btn btn-primary w-100">
+            <button type="submit" name="login" value="1" class="btn btn-primary w-100">
               <i class="bi bi-box-arrow-in-right"></i> Увійти
             </button>
           </form>
@@ -78,13 +78,13 @@
 
         <!-- Register Tab -->
         <div class="tab-pane fade" id="register" role="tabpanel">
-          <form method="POST" action="" class="auth-form mt-4">
+          <form method="POST" action="{{ base }}auth" class="auth-form mt-4">
 
-            {% if register_error %}
+            {% if register_error|default(false) %}
               <div class="alert alert-danger">{{ register_error }}</div>
             {% endif %}
 
-            {% if register_success %}
+            {% if register_success|default(false) %}
               <div class="alert alert-success">{{ register_success }}</div>
             {% endif %}
 
@@ -176,7 +176,7 @@
               </div>
             </div>
 
-            <button type="submit" name="register" class="btn btn-primary w-100">
+            <button type="submit" name="register" value="1" class="btn btn-primary w-100">
               <i class="bi bi-person-plus-fill"></i> Зареєструватися
             </button>
           </form>

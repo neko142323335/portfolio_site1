@@ -1,0 +1,13 @@
+.git
+.gitignore
+.env
+*.md
+!MVC_GUIDE.md
+!MVC_SUCCESS.md
+!QUICKSTART_MVC.md
+docker-compose.yml
+dockerfile
+.vscode
+.idea
+public/assets
+public/database

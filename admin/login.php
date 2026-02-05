@@ -1,16 +1,22 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/helpers.php';
 
+use App\Database\Connection;
+
+$db = Connection::get();
+
 $is_admin_page = true;
 
-require_once __DIR__ . '/../includes/twig.php';
+$twig = require __DIR__ . '/../includes/twig.php';
 
 // Redirect if already logged in
 if (isset($_SESSION['admin_logged']) && $_SESSION['admin_logged'] === true) {
-  header('Location: dashboard.php');
+  header('Location: /admin/dashboard');
   exit;
 }
 
@@ -31,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($admin && password_verify($password, $admin['password'])) {
         $_SESSION['admin_logged'] = true;
         $_SESSION['admin_email'] = $admin['email'];
-        header('Location: dashboard.php');
+        header('Location: /admin/dashboard');
         exit;
       } else {
         $error = ERROR_MESSAGES['auth_failed'];

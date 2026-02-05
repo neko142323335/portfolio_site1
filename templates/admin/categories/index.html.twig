@@ -1,15 +1,15 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Панель адміністратора - {{ site_name }}{% endblock %}
+{% block title %}Категорії - {{ site_name }}{% endblock %}
 
 {% block content %}
   <section class="auth-section" style="padding-top: 150px; padding-bottom: 100px; min-height: auto;">
     <div class="auth-container" style="max-width: 900px;">
-      <h2 class="auth-title" style="color: #ff4500;">Панель адміністратора</h2>
+      <h2 class="auth-title" style="color: #ff4500;">Категорії</h2>
 
       {% if success %}
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <i class="bi bi-check-circle"></i> {{ success }}
+          <i class="bi bi-check-circle"></i> Операція успішна
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
       {% endif %}
@@ -22,20 +22,17 @@
       {% endif %}
 
       <div class="mb-4">
-          <a href="/admin/works/add" class="btn btn-primary">
-          <i class="bi bi-plus-circle"></i> Додати нову роботу
+        <a href="/admin/categories/add" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Додати категорію
         </a>
-          <a href="/admin/categories" class="btn btn-outline-primary ms-2">
-            <i class="bi bi-tags"></i> Категорії
-          </a>
-          <a href="/admin/users" class="btn btn-outline-primary ms-2">
-            <i class="bi bi-people"></i> Користувачі
-          </a>
+        <a href="/admin/dashboard" class="btn btn-outline-secondary ms-2">
+          <i class="bi bi-arrow-left"></i> Назад до дашборду
+        </a>
       </div>
 
-      {% if works is empty %}
+      {% if categories is empty %}
         <div class="alert alert-info text-center">
-          Робіт немає. <a href="/admin/works/add" style="color: #ff4500; font-weight: 600;">Додати першу роботу</a>
+          Категорій немає. <a href="/admin/categories/add" style="color: #ff4500; font-weight: 600;">Додати першу категорію</a>
         </div>
       {% else %}
         <div class="table-responsive">
@@ -43,22 +40,20 @@
             <thead>
               <tr>
                 <th style="color: #ff4500;">Назва</th>
-                <th style="color: #ff4500;">Категорія</th>
-                <th style="color: #ff4500;">Дата</th>
+                <th style="color: #ff4500;">Опис</th>
                 <th style="color: #ff4500;">Дії</th>
               </tr>
             </thead>
             <tbody>
-              {% for work in works %}
+              {% for category in categories %}
                 <tr>
-                  <td>{{ work.title|sanitize }}</td>
-                  <td>{{ work.category|sanitize }}</td>
-                  <td>{{ work.created_at }}</td>
+                  <td>{{ category.name|sanitize }}</td>
+                  <td>{{ category.description|sanitize }}</td>
                   <td>
-                    <a href="/admin/works/edit?id={{ work.id }}" class="btn btn-sm btn-warning">
+                    <a href="/admin/categories/edit?id={{ category.id }}" class="btn btn-sm btn-warning">
                       <i class="bi bi-pencil"></i> Редагувати
                     </a>
-                    <a href="/admin/works/delete?id={{ work.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені?')">
+                    <a href="/admin/categories/delete?id={{ category.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені?')">
                       <i class="bi bi-trash"></i> Видалити
                     </a>
                   </td>

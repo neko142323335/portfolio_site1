@@ -1,0 +1,28 @@
+# Перенаправлення всіх запитів на index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Дозволити доступ до assets
+    RewriteCond %{REQUEST_URI} ^/assets/.*$ [OR]
+    RewriteCond %{REQUEST_URI} ^/database/.*$
+    RewriteRule ^ - [L]
+    
+    # Якщо файл або директорія існують - використовувати їх
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Інакше - перенаправити на index.php
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Заборонити доступ до sensitive файлів
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Дозволити доступ до зображень та статичних файлів
+<FilesMatch "\.(jpg|jpeg|png|gif|svg|css|js|ico|woff|woff2|ttf|eot)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>

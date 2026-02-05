@@ -30,20 +30,31 @@ $twig->addFilter(new \Twig\TwigFilter('sanitize', function($text) {
     return sanitize_input($text);
 }));
 
+// Переконуємось що сесія запущена
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Add global variables
 $twig->addGlobal('site_name', SITE_NAME);
 $twig->addGlobal('site_lang', SITE_LANG);
-$twig->addGlobal('base', isset($is_admin_page) && $is_admin_page ? '../' : '');
-$twig->addGlobal('user_id', $_SESSION['user_id'] ?? null);
-$twig->addGlobal('admin_logged', $_SESSION['admin_logged'] ?? false);
+$twig->addGlobal('base', '/'); // MVC використовує чисті URL від кореня
 
-// Add custom functions
+// Add custom functions для динамічного доступу до сесії
 $twig->addFunction(new \Twig\TwigFunction('is_admin', function() {
     return is_admin();
 }));
 
 $twig->addFunction(new \Twig\TwigFunction('is_current_page', function($page) {
     return is_current_page($page);
+}));
+
+$twig->addFunction(new \Twig\TwigFunction('user_id', function() {
+    return $_SESSION['user_id'] ?? null;
+}));
+
+$twig->addFunction(new \Twig\TwigFunction('user_name', function() {
+    return $_SESSION['user_name'] ?? null;
 }));
 
 return $twig;
