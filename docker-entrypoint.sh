@@ -1,5 +1,9 @@
 #!/bin/bash
 set -e
+mkdir -p /var/www/html/database
+touch /var/www/html/database/portfolio.db
+chown -R www-data:www-data /var/www/html/database
+chmod -R 775 /var/www/html/database
 
 # Завжди оновлювати autoload при старті контейнера
 echo "Updating Composer autoload..."

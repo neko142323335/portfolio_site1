@@ -1,15 +1,17 @@
 volumes:
   vendor:
 
+
 services:
   web:
     build: .
     container_name: portfolio-php
+    entrypoint: /usr/local/bin/docker-entrypoint.sh
     ports:
       - "8080:80"
     volumes:
       - .:/var/www/html
-      - ./database:/var/www/html/database
+      - .\database:/var/www/html/database
       - vendor:/var/www/html/vendor
     environment:
       - PHP_DISPLAY_ERRORS=1
