@@ -8,7 +8,7 @@ use App\Models\User;
  */
 class AuthController extends BaseController
 {
-  public function login()
+  public function login(): void
   {
     // Якщо вже залогінений - редірект
     if ($this->isLoggedIn()) {
@@ -43,7 +43,7 @@ class AuthController extends BaseController
     ]);
   }
 
-  private function handleLogin($userModel, &$login_error)
+  private function handleLogin(User $userModel, string &$login_error): void
   {
     require_once __DIR__ . '/../../includes/helpers.php';
     
@@ -73,7 +73,7 @@ class AuthController extends BaseController
     }
   }
 
-  private function handleRegister($userModel, &$register_error, &$register_success)
+  private function handleRegister(User $userModel, string &$register_error, string &$register_success): void
   {
     require_once __DIR__ . '/../../includes/helpers.php';
     
@@ -115,7 +115,7 @@ class AuthController extends BaseController
     }
   }
 
-  public function logout()
+  public function logout(): void
   {
     session_destroy();
     $this->redirect('/?logged_out=1');

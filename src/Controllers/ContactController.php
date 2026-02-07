@@ -6,7 +6,7 @@ namespace App\Controllers;
  */
 class ContactController extends BaseController
 {
-  public function index()
+  public function index(): void
   {
     $sent = $this->getQuery('sent', 0);
     $error = '';
@@ -34,7 +34,7 @@ class ContactController extends BaseController
     ]);
   }
 
-  private function handleContact()
+  private function handleContact(): string
   {
     require_once __DIR__ . '/../../includes/helpers.php';
     

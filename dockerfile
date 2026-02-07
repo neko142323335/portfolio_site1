@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
 # Enable required PHP modules
 RUN docker-php-ext-install pdo pdo_sqlite
 
+# Copy custom PHP configuration
+COPY php.ini /usr/local/etc/php/conf.d/uploads.ini
+
 # Enable mod_rewrite
 RUN a2enmod rewrite
 

@@ -21,7 +21,7 @@ class UserController extends BaseController
   /**
    * Список користувачів
    */
-  public function index()
+  public function index(): void
   {
     try {
       $users = $this->userModel->getAll();
@@ -46,7 +46,7 @@ class UserController extends BaseController
   /**
    * Форма додавання користувача
    */
-  public function add()
+  public function add(): void
   {
     require_once __DIR__ . '/../../../includes/helpers.php';
     
@@ -96,7 +96,7 @@ class UserController extends BaseController
   /**
    * Форма редагування користувача
    */
-  public function edit()
+  public function edit(): void
   {
     require_once __DIR__ . '/../../../includes/helpers.php';
     
@@ -174,7 +174,7 @@ class UserController extends BaseController
   /**
    * Видалення користувача
    */
-  public function delete()
+  public function delete(): void
   {
     require_once __DIR__ . '/../../../includes/helpers.php';
     

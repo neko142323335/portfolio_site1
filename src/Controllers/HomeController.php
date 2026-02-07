@@ -8,7 +8,7 @@ use App\Models\Work;
  */
 class HomeController extends BaseController
 {
-  public function index()
+  public function index(): void
   {
     try {
       $workModel = new Work($this->db);

@@ -26,7 +26,7 @@ abstract class BaseController
   /**
    * Рендер шаблону
    */
-  protected function render($template, $data = [])
+  protected function render(string $template, array $data = []): void
   {
     echo $this->twig->render($template, $data);
   }
@@ -34,7 +34,7 @@ abstract class BaseController
   /**
    * Редірект
    */
-  protected function redirect($url)
+  protected function redirect(string $url): void
   {
     header('Location: ' . $url);
     exit;
@@ -43,7 +43,7 @@ abstract class BaseController
   /**
    * Перевірка чи користувач залогінений
    */
-  protected function isLoggedIn()
+  protected function isLoggedIn(): bool
   {
     return isset($_SESSION['user_id']);
   }
@@ -51,7 +51,7 @@ abstract class BaseController
   /**
    * Перевірка чи користувач адміністратор
    */
-  protected function isAdmin()
+  protected function isAdmin(): bool
   {
     return isset($_SESSION['admin_logged']) && $_SESSION['admin_logged'] === true;
   }
@@ -59,27 +59,35 @@ abstract class BaseController
   /**
    * Вимагати авторизацію
    */
-  protected function requireAuth()
+  protected function requireAuth(): void
   {
     if (!$this->isLoggedIn()) {
-      $this->redirect('auth.php');
+      $this->redirect('/auth');
     }
+  }
+
+  /**
+   * Вимагати авторизацію користувача (аліас)
+   */
+  protected function requireUser(): void
+  {
+    $this->requireAuth();
   }
 
   /**
    * Вимагати права адміністратора
    */
-  protected function requireAdmin()
+  protected function requireAdmin(): void
   {
     if (!$this->isAdmin()) {
-      $this->redirect('admin/login.php');
+      $this->redirect('/admin/login');
     }
   }
 
   /**
    * Отримати POST дані
    */
-  protected function getPost($key, $default = null)
+  protected function getPost(string $key, mixed $default = null): mixed
   {
     return $_POST[$key] ?? $default;
   }
@@ -87,7 +95,7 @@ abstract class BaseController
   /**
    * Отримати GET дані
    */
-  protected function getQuery($key, $default = null)
+  protected function getQuery(string $key, mixed $default = null): mixed
   {
     return $_GET[$key] ?? $default;
   }
@@ -95,7 +103,7 @@ abstract class BaseController
   /**
    * Перевірка POST запиту
    */
-  protected function isPost()
+  protected function isPost(): bool
   {
     return $_SERVER['REQUEST_METHOD'] === 'POST';
   }

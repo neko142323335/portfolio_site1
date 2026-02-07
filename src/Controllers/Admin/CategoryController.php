@@ -15,7 +15,7 @@ class CategoryController extends BaseController
     $this->requireAdmin();
   }
 
-  public function index()
+  public function index(): void
   {
     $categoryModel = new Category($this->db);
     $categories = $categoryModel->getAll();
@@ -28,7 +28,7 @@ class CategoryController extends BaseController
     ]);
   }
 
-  public function add()
+  public function add(): void
   {
     $error = '';
 
@@ -45,7 +45,7 @@ class CategoryController extends BaseController
     ]);
   }
 
-  public function edit()
+  public function edit(): void
   {
     $id = (int) $this->getQuery('id', 0);
     $categoryModel = new Category($this->db);
@@ -70,7 +70,7 @@ class CategoryController extends BaseController
     ]);
   }
 
-  public function delete()
+  public function delete(): void
   {
     $id = (int) $this->getQuery('id', 0);
     $categoryModel = new Category($this->db);
@@ -83,7 +83,7 @@ class CategoryController extends BaseController
     }
   }
 
-  private function handleAdd()
+  private function handleAdd(): string
   {
     require_once __DIR__ . '/../../../includes/helpers.php';
 
@@ -103,7 +103,7 @@ class CategoryController extends BaseController
     return '';
   }
 
-  private function handleEdit($id)
+  private function handleEdit(int $id): string
   {
     require_once __DIR__ . '/../../../includes/helpers.php';
 
