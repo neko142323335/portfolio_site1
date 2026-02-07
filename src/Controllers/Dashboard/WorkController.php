@@ -1,20 +1,21 @@
 <?php
-namespace App\Controllers\Admin;
+namespace App\Controllers\Dashboard;
 
 use App\Controllers\BaseController;
 use App\Models\Work;
 use App\Models\Category;
+use App\Models\User;
 use App\Validators\FileValidator;
 
 /**
- * Контролер адмін панелі для управління роботами
+ * Контролер користувацької панелі для управління роботами
  */
 class WorkController extends BaseController
 {
   public function __construct($db, $twig)
   {
     parent::__construct($db, $twig);
-    $this->requireAdmin();
+    $this->requireAuth();
   }
 
   /**
@@ -45,19 +46,21 @@ class WorkController extends BaseController
           if (!$fileValidation['valid']) {
             $error = $fileValidation['error'];
           } else {
-            // Файл валіден, завантажити його
             $file_upload = save_uploaded_file($_FILES['image']);
             if (!$file_upload['success']) {
               $error = $file_upload['error'];
             } else {
               $workModel = new Work($this->db);
+              $userModel = new User($this->db);
+              $currentUser = $userModel->get_current_user();
               $workModel->create([
                 'title' => $title,
+                'user_id' => $currentUser['id'],
                 'description' => $description,
                 'category' => $category,
-                'image_path' => $file_upload['path']
+                'image' => $file_upload['path']
               ]);
-              $this->redirect('/admin/dashboard?success=1');
+              $this->redirect('/dashboard?success=1');
             }
           }
         }
@@ -70,7 +73,7 @@ class WorkController extends BaseController
       }
     }
 
-    $this->render('admin/works/add_work.html.twig', [
+    $this->render('/dashboard/works/add.html.twig', [
       'error' => $error,
       'categories' => $categories,
     ]);
@@ -88,7 +91,7 @@ class WorkController extends BaseController
     $id = (int) $this->getQuery('id');
     
     if (!$id) {
-      $this->redirect('/admin/dashboard?error=' . urlencode('Роботу не знайдено'));
+      $this->redirect('/dashboard?error=' . urlencode('Роботу не знайдено'));
     }
 
     $categoryModel = new Category($this->db);
@@ -99,14 +102,15 @@ class WorkController extends BaseController
       $work = $workModel->getById($id);
 
       if (!$work) {
-        $this->redirect('/admin/dashboard?error=' . urlencode('Роботу не знайдено'));
+        $this->redirect('/dashboard?error=' . urlencode('Роботу не знайдено'));
       }
 
       if ($this->isPost()) {
         $title = sanitize_input($this->getPost('title'));
         $description = sanitize_input($this->getPost('description'));
         $category = sanitize_input($this->getPost('category'));
-
+        $userModel = new User($this->db);
+        $currentUser = $userModel->get_current_user();
         if (!$title) {
           $error = "Назва обов'язкова";
         } elseif (!$category) {
@@ -143,14 +147,14 @@ class WorkController extends BaseController
               'title' => $title,
               'description' => $description,
               'category' => $category,
-              'image_path' => $image_path
+              'image' => $image_path
             ]);
-            $this->redirect('/admin/dashboard?success=1');
+            $this->redirect('/dashboard?success=1');
           }
         }
       }
 
-      $this->render('admin/works/edit_work.html.twig', [
+      $this->render('/dashboard/works/edit.html.twig', [
         'work' => $work,
         'error' => $error,
         'categories' => $categories,
@@ -158,10 +162,10 @@ class WorkController extends BaseController
 
     } catch (\PDOException $e) {
       log_error('Database error in WorkController::edit', ['id' => $id, 'message' => $e->getMessage()]);
-      $this->redirect('/admin/dashboard?error=' . urlencode('Помилка бази даних'));
+      $this->redirect('/dashboard?error=' . urlencode('Помилка бази даних'));
     } catch (\Exception $e) {
       log_error('Error in WorkController::edit', ['message' => $e->getMessage()]);
-      $this->redirect('/admin/dashboard?error=' . urlencode($e->getMessage()));
+      $this->redirect('/dashboard?error=' . urlencode($e->getMessage()));
     }
   }
 
@@ -175,7 +179,7 @@ class WorkController extends BaseController
     $id = (int) $this->getQuery('id');
 
     if (!$id) {
-      $this->redirect('/admin/dashboard?error=' . urlencode('Роботу не знайдено'));
+      $this->redirect('/dashboard?error=' . urlencode('Роботу не знайдено'));
     }
 
     try {
@@ -183,7 +187,7 @@ class WorkController extends BaseController
       $work = $workModel->getById($id);
 
       if (!$work) {
-        $this->redirect('/admin/dashboard?error=' . urlencode('Роботу не знайдено'));
+        $this->redirect('/dashboard?error=' . urlencode('Роботу не знайдено'));
       }
 
       // Видалити з бази даних
@@ -197,11 +201,11 @@ class WorkController extends BaseController
         }
       }
 
-      $this->redirect('/admin/dashboard?success=1');
+      $this->redirect('/dashboard?success=1');
 
     } catch (\Exception $e) {
       log_error('Error deleting work', ['id' => $id, 'message' => $e->getMessage()]);
-      $this->redirect('/admin/dashboard?error=' . urlencode('Помилка при видаленні'));
+      $this->redirect('/dashboard?error=' . urlencode('Помилка при видаленні'));
     }
   }
 }

@@ -27,7 +27,11 @@
       </div>
 
       <h4 class="mb-3" style="color: #ff4500;">Галерея робіт</h4>
-
+      <div class="mb-4">
+          <a href="/dashboard/works/add" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Додати нову роботу
+        </a>
+      </div>
       {% if works is empty %}
         <div class="alert alert-info text-center">
           Робіт поки немає
@@ -37,6 +41,7 @@
           {% for work in works %}
             <div class="col">
               <div class="card h-100 bg-dark text-white">
+                
                 <img src="{{ work.image|sanitize }}" class="card-img-top" alt="{{ work.title|sanitize }}" style="height: 200px; object-fit: cover;">
                 <div class="card-body">
                   <h5 class="card-title">{{ work.title|sanitize }}</h5>
@@ -47,13 +52,81 @@
                     <p class="card-text">{{ work.description|sanitize }}</p>
                   {% endif %}
                 </div>
-                <div class="card-footer">
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                  <div class="mb-4">
+                      <a href="/dashboard/works/edit?id={{ work.id }}" class="btn btn-primary">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                  </div>
+                  <div class="mb-4">
+                      <a href="/dashboard/works/delete?id={{ work.id }}" class="btn btn-danger" onclick="return confirm('Ви впевнені?')">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </div>
                   <small class="text-muted">{{ work.created_at }}</small>
                 </div>
               </div>
             </div>
           {% endfor %}
         </div>
+
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+          <div class="d-flex justify-content-center my-5">
+            <nav aria-label="Навігація по сторінках">
+              <ul class="pagination">
+                {% if has_prev %}
+                  <li class="page-item">
+                    <a class="page-link" href="{{ base }}dashboard?page={{ current_page - 1 }}">
+                      ← Попередня
+                    </a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <span class="page-link">← Попередня</span>
+                  </li>
+                {% endif %}
+
+                {% for page_num in 1..total_pages %}
+                  {% if page_num == current_page %}
+                    <li class="page-item active">
+                      <span class="page-link">
+                        {{ page_num }}
+                        <span class="visually-hidden">(поточна сторінка)</span>
+                      </span>
+                    </li>
+                  {% elseif (page_num == 1 or page_num == total_pages) or (page_num >= current_page - 1 and page_num <= current_page + 1) %}
+                    <li class="page-item">
+                      <a class="page-link" href="{{ base }}dashboard?page={{ page_num }}">
+                        {{ page_num }}
+                      </a>
+                    </li>
+                  {% elseif page_num == 2 and current_page > 3 %}
+                    <li class="page-item disabled">
+                      <span class="page-link">…</span>
+                    </li>
+                  {% elseif page_num == total_pages - 1 and current_page < total_pages - 2 %}
+                    <li class="page-item disabled">
+                      <span class="page-link">…</span>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+
+                {% if has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="{{ base }}dashboard?page={{ current_page + 1 }}">
+                      Наступна →
+                    </a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <span class="page-link">Наступна →</span>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
       {% endif %}
     </div>
   </section>

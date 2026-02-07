@@ -62,11 +62,13 @@ class Connection
       $db->exec('
         CREATE TABLE IF NOT EXISTS works (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER NOT NULL,
           title TEXT NOT NULL,
           description TEXT,
           image TEXT,
           category TEXT,
-          created_at DATETIME NOT NULL
+          created_at DATETIME NOT NULL,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
       ');
 

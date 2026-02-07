@@ -20,7 +20,10 @@ function validate_password($password) {
 }
 
 /**
- * Validate file upload
+ * Validate file upload (DEPRECATED - use FileValidator::validate() instead)
+ * 
+ * @deprecated Використовуйте \App\Validators\FileValidator::validate()
+ * @see \App\Validators\FileValidator::validate()
  */
 function validate_file_upload($file) {
   if (!isset($file['tmp_name']) || empty($file['tmp_name'])) {
@@ -49,11 +52,25 @@ function validate_file_upload($file) {
 
 /**
  * Move uploaded file to correct directory with timestamp
+ * 
+ * ВИМОГИ: Завжди передавайте resultado валідацію FileValidator перед цією функцією!
+ * 
+ * @param array $file $_FILES['fieldname'] - ПОВИНЕН бути валідований через FileValidator::validate()
+ * @return array ['success' => bool, 'error' => string, 'path' => string, 'filename' => string]
+ * 
+ * ПРИКЛАД:
+ * use App\Validators\FileValidator;
+ * $validation = FileValidator::validate($_FILES['image'] ?? []);
+ * if (!$validation['valid']) {
+ *   $error = $validation['error'];
+ * } else {
+ *   $result = save_uploaded_file($_FILES['image']);
+ * }
  */
 function save_uploaded_file($file) {
-  $validation = validate_file_upload($file);
-  if (!$validation['valid']) {
-    return ['success' => false, 'error' => $validation['error']];
+  // Остаточна перевірка - файл має вже бути валідований через FileValidator
+  if (empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+    return ['success' => false, 'error' => 'Невалідний файл для завантаження'];
   }
 
   if (!is_dir(UPLOADS_DIR)) {

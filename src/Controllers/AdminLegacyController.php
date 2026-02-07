@@ -6,17 +6,17 @@ namespace App\Controllers;
  */
 class AdminLegacyController extends BaseController
 {
-  private function includeLegacy($file)
+  private function includeLegacy(string $file): void
   {
     require __DIR__ . '/../../admin/' . $file;
   }
 
-  public function login()
+  public function login(): void
   {
     $this->includeLegacy('login.php');
   }
 
-  public function dashboard()
+  public function dashboard(): void
   {
     $this->includeLegacy('dashboard.php');
   }

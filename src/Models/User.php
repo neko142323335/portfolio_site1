@@ -19,7 +19,7 @@ class User
   /**
    * Знайти користувача за email
    */
-  public function findByEmail($email)
+  public function findByEmail(string $email): array|false
   {
     $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email');
     $stmt->execute([':email' => $email]);
@@ -29,17 +29,25 @@ class User
   /**
    * Знайти користувача за ID
    */
-  public function findById($id)
+  public function findById(int $id): array|false
   {
     $stmt = $this->db->prepare('SELECT * FROM users WHERE id = :id');
     $stmt->execute([':id' => $id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  public function get_current_user(): array|null
+  {
+    if (isset($_SESSION['user_id'])) {
+      return $this->findById($_SESSION['user_id']);
+    }
+    return null;
+  }
+
   /**
    * Створити нового користувача
    */
-  public function create($data)
+  public function create(array $data): bool
   {
     try {
       $stmt = $this->db->prepare('
@@ -65,7 +73,7 @@ class User
   /**
    * Перевірити пароль
    */
-  public function verifyPassword($user, $password)
+  public function verifyPassword(array $user, string $password): bool
   {
     return password_verify($password, $user['password']);
   }
@@ -73,7 +81,7 @@ class User
   /**
    * Перевірити чи користувач адміністратор
    */
-  public function isAdmin($user)
+  public function isAdmin(array $user): bool
   {
     return isset($user['is_admin']) && (bool)$user['is_admin'];
   }
@@ -81,16 +89,17 @@ class User
   /**
    * Отримати всіх користувачів
    */
-  public function getAll()
+  public function getAll(): array
   {
-    $stmt = $this->db->query('SELECT id, name, email, is_admin, created_at FROM users ORDER BY created_at DESC');
+    $stmt = $this->db->prepare('SELECT id, name, email, is_admin, created_at FROM users ORDER BY created_at DESC');
+    $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   /**
    * Отримати користувача за ID (публічна інформація)
    */
-  public function getById($id)
+  public function getById(int $id): array|false
   {
     $stmt = $this->db->prepare('SELECT id, name, email, is_admin, created_at FROM users WHERE id = :id');
     $stmt->execute([':id' => $id]);
@@ -100,7 +109,7 @@ class User
   /**
    * Перевірити, чи існує email
    */
-  public function emailExists($email, $excludeId = null)
+  public function emailExists(string $email, ?int $excludeId = null): bool
   {
     $sql = 'SELECT COUNT(*) FROM users WHERE email = :email';
     $params = [':email' => $email];
@@ -118,7 +127,7 @@ class User
   /**
    * Оновити користувача
    */
-  public function update($id, $data)
+  public function update(int $id, array $data): bool
   {
     $sql = 'UPDATE users SET name = :name, email = :email, is_admin = :is_admin';
     $params = [
@@ -142,7 +151,7 @@ class User
   /**
    * Видалити користувача
    */
-  public function delete($id)
+  public function delete(int $id): bool
   {
     $stmt = $this->db->prepare('DELETE FROM users WHERE id = :id');
     return $stmt->execute([':id' => $id]);
@@ -151,9 +160,10 @@ class User
   /**
    * Отримати кількість адміністраторів
    */
-  public function getAdminCount()
+  public function getAdminCount(): int
   {
-    $stmt = $this->db->query('SELECT COUNT(*) FROM users WHERE is_admin = 1');
+    $stmt = $this->db->prepare('SELECT COUNT(*) FROM users WHERE is_admin = 1');
+    $stmt->execute();
     return $stmt->fetchColumn();
   }
 }

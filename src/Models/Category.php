@@ -15,14 +15,15 @@ class Category
     $this->db = $db;
   }
 
-  public function getAll()
+  public function getAll(): array
   {
     $this->ensureTable();
-    $stmt = $this->db->query('SELECT * FROM categories ORDER BY name ASC');
+    $stmt = $this->db->prepare('SELECT * FROM categories ORDER BY name ASC');
+    $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function getById($id)
+  public function getById(int $id): array|false
   {
     $this->ensureTable();
     $stmt = $this->db->prepare('SELECT * FROM categories WHERE id = :id');
@@ -30,7 +31,7 @@ class Category
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function create($data)
+  public function create(array $data): bool
   {
     $this->ensureTable();
     $stmt = $this->db->prepare('INSERT INTO categories (name, description) VALUES (:n, :d)');
@@ -40,7 +41,7 @@ class Category
     ]);
   }
 
-  public function update($id, $data)
+  public function update(int $id, array $data): bool
   {
     $this->ensureTable();
     $stmt = $this->db->prepare('UPDATE categories SET name = :n, description = :d WHERE id = :id');
@@ -51,7 +52,7 @@ class Category
     ]);
   }
 
-  public function delete($id)
+  public function delete(int $id): bool
   {
     $this->ensureTable();
     $stmt = $this->db->prepare('DELETE FROM categories WHERE id = :id');
